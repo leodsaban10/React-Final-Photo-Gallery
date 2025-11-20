@@ -6,13 +6,15 @@ const initialState = {
     selectedCategory: 'All',
     isLoading: false,
     selectedImage: null,
-    isModalOpen: false
+    isModalOpen: false,
+    searchQuery: ''
 };
 
 const ACTION_TYPES = {
     SET_LOADING: 'SET_LOADING',
     SET_IMAGES: 'SET_IMAGES',
     SET_CATEGORY: 'SET_CATEGORY',
+    SET_SEARCH_QUERY: 'SET_SEARCH_QUERY',
     OPEN_MODAL: 'OPEN_MODAL',
     CLOSE_MODAL: 'CLOSE_MODAL'
 };
@@ -24,7 +26,9 @@ const galleryReducer = (state, action) => {
         case ACTION_TYPES.SET_IMAGES:
             return { ...state, images: action.payload, isLoading: false };
         case ACTION_TYPES.SET_CATEGORY:
-            return { ...state, selectedCategory: action.payload };
+            return { ...state, selectedCategory: action.payload, searchQuery: '' };
+        case ACTION_TYPES.SET_SEARCH_QUERY:
+            return { ...state, searchQuery: action.payload, selectedCategory: 'All' };
         case ACTION_TYPES.OPEN_MODAL:
             return { ...state, selectedImage: action.payload, isModalOpen: true };
         case ACTION_TYPES.CLOSE_MODAL:
@@ -52,6 +56,10 @@ export const GalleryProvider = ({ children }) => {
         dispatch({ type: ACTION_TYPES.SET_CATEGORY, payload: category });
     };
 
+    const setSearchQuery = (query) => {
+        dispatch({ type: ACTION_TYPES.SET_SEARCH_QUERY, payload: query });
+    };
+
     const openModal = (image) => {
         dispatch({ type: ACTION_TYPES.OPEN_MODAL, payload: image });
     };
@@ -73,14 +81,29 @@ export const GalleryProvider = ({ children }) => {
         }
     };
 
+    // API function to fetch images by search query
+    const searchImages = async (query) => {
+        setLoading(true);
+        try {
+            const images = await fetchImagesByCategory(query);
+            setImages(images);
+            setSearchQuery(query);
+        } catch (error) {
+            console.error('Failed to search images:', error);
+            setLoading(false);
+        }
+    };
+
     const value = {
         ...state,
         setLoading,
         setImages,
         setCategory,
+        setSearchQuery,
         openModal,
         closeModal,
-        fetchImages
+        fetchImages,
+        searchImages
     };
 
     return (

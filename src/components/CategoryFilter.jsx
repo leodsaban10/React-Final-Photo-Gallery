@@ -2,7 +2,7 @@ import { useGallery } from '../context/GalleryContext';
 import { useState } from 'react';
 
 export default function CategoryFilter() {
-    const { selectedCategory, fetchImages, isLoading } = useGallery();
+    const { selectedCategory, fetchImages, searchImages, isLoading } = useGallery();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     
@@ -37,7 +37,7 @@ export default function CategoryFilter() {
     const handleSearchSubmit = (e) => {
         e.preventDefault();
         if (searchQuery.trim()) {
-            fetchImages(searchQuery.trim());
+            searchImages(searchQuery.trim());
         }
     };
 
