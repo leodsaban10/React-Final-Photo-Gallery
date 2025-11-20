@@ -3,15 +3,19 @@ import './App.css'
 import CategoryFilter from './components/CategoryFilter'
 import Gallery from './components/Gallery'
 import Header from './components/Header'
-import ImageCard from './components/ImageCard'
+import ImageModal from './components/ImageModal'
+import { GalleryProvider } from './context/GalleryContext'
 
 function App() {
 
   return (
     <>
-      <Header />
-      <CategoryFilter/>
-      <Gallery/>
+      <GalleryProvider>
+        <Header />
+        <CategoryFilter/>
+        <Gallery/>
+        <ImageModal />
+      </GalleryProvider>
     </>
   )
 }

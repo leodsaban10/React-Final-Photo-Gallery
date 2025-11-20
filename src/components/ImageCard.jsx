@@ -1,14 +1,31 @@
 
-export default function ImageCard() {
+import { useGallery } from '../context/GalleryContext';
 
-    const imageData = {
-        url: "https://via.placeholder.com/300x200",
-        title: "Sample Image",
-        category: "Birds"
-    }
+export default function ImageCard({ image }) {
+    const { openModal } = useGallery();
+
+    const handleImageClick = () => {
+        openModal(image);
+    };
+
     return (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-xl hover:scale-105 transition-transform duration-300">
-            <img src={imageData.url} alt={imageData.title} className="w-full h-48 object-cover"/>
+        <div 
+            className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-xl hover:scale-105 transition-transform duration-300"
+            onClick={handleImageClick}
+        >
+            <img 
+                src={image.urls.regular} 
+                alt={image.alt_description || image.description || 'Unsplash image'} 
+                className="w-full h-48 object-cover"
+            />
+            <div className="p-3">
+                <p className="text-sm text-gray-600 truncate">
+                    {image.alt_description || image.description || 'Beautiful image'}
+                </p>
+                <p className="text-xs text-gray-400 mt-1">
+                    By {image.user.name}
+                </p>
+            </div>
         </div>
     )
 }
